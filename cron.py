@@ -8,7 +8,7 @@ INSTA_USER = "merck081"
 INSTA_PASS = "ip13578041!"
 
 # --- [필수 설정] 감시할 타겟 인스타 ID 입력 ---
-TARGET_USER = ["utility.kang", "pe_study_note", "engineering_in_one]
+TARGET_USER = ["utility.kang", "pe_study_note", "engineering_in_one"]
 
 # 저장할 폴더 설정
 SAVE_DIR = "downloaded_media"
