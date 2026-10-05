@@ -8,7 +8,7 @@ INSTA_USER = "merck081"
 INSTA_PASS = "ip13578041!"
 
 # --- [필수 설정] 감시할 타겟 인스타 ID 입력 ---
-TARGET_USER = "utility.kang" 
+TARGET_USER = ["utility.kang", "pe_study_note", "engineering_in_one]
 
 # 저장할 폴더 설정
 SAVE_DIR = "downloaded_media"
@@ -34,16 +34,20 @@ try:
     print("로그인 성공!")
     
     # 상대방 프로필 가져오기
-    profile = instaloader.Profile.from_username(L.context, TARGET_USER)
-    
-    # 최신 게시물 5개만 확인하며 다운로드 (이미 다운로드된 파일은 프로그램이 알아서 건너뜁니다)
-    print(f"@{TARGET_USER} 계정의 최신 게시물을 확인합니다...")
-    for count, post in enumerate(profile.get_posts()):
-        if count >= 5: 
-            break
-        L.download_post(post, target=TARGET_USER)
-        
-    print("🎉 최신 게시물 수집 및 업데이트 완료!")
+   # 여러 명의 타겟을 순서대로 수집합니다
+for target in TARGET_USERS:
+    try:
+        print(f"@{target} 계정의 최신 게시물을 확인합니다...")
+        profile = instaloader.Profile.from_username(L.context, target)
 
-except Exception as e:
-    print(f"❌ 에러 발생: {e}")
+        # 각 계정당 최신 게시물 5개씩 다운로드
+        for count, post in enumerate(profile.get_posts()):
+            if count >= 5: 
+                break
+            L.download_post(post, target=target)
+
+        # 인스타 서버 차단을 피하기 위해 계정 사이에 5초씩 쉬어줍니다
+        time.sleep(5) 
+    except Exception as target_error:
+        print(f"❌ @{target} 수집 중 에러 발생: {target_error}")
+        continue
