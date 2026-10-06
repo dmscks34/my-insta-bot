@@ -30,37 +30,6 @@ SAVE_DIR = "downloaded_media"
 if not os.path.exists(SAVE_DIR):
     os.makedirs(SAVE_DIR)
 
-# 사이드바 - 인스타 수집기 기능
-st.sidebar.header("📥 새 게시물 가져오기")
-target_profile = st.sidebar.text_input("추적할 인스타 ID 입력 (예: 보셨던 릴스 계정 ID)")
-
-if st.sidebar.button("최신 게시물 긁어오기"):
-    if target_profile:
-        with st.spinner("인스타에서 데이터를 가져오는 중..."):
-            try:
-                L = instaloader.Instaloader(
-                    dirname_pattern=os.path.join(SAVE_DIR, target_profile), # 계정별 폴더 분류
-                    download_pictures=True,
-                    download_videos=True,
-                    download_geotags=False,
-                    download_comments=False,
-                    save_metadata=False
-                )
-                # 실제로 수집하는 명령 (최신 글 위주로 가져옵니다)
-                profile = instaloader.Profile.from_username(L.context, target_profile)
-                
-                # 테스트용으로 최신 게시물 3개만 먼저 긁어오기
-                for count, post in enumerate(profile.get_posts()):
-                    if count >= 3: 
-                        break
-                    L.download_post(post, target=target_profile)
-                
-                st.sidebar.success(f"@{target_profile} 수집 완료!")
-            except Exception as e:
-                st.sidebar.error(f"에러 발생: {e}")
-    else:
-        st.sidebar.warning("계정 ID를 입력해주세요.")
-
 # --- 3. 데이터 분류 및 시청 화면 ---
 st.header("📂 수집된 데이터 분류 보기")
 
